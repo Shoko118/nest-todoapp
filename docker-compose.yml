@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  nestapp:
+    container_name: nestapp
+    image: nestapp-image
+    build:
+      context: ./backend
+      dockerfile: backend.dockerFile
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_TYPE=postgres
+      - PG_HOST=host.docker.internal
+      - PG_USER=postgres
+      - PG_PASSWORD=password
+      - PG_DB=crud
+      - PG_PORT=5432
+    depends_on:
+      - db
+
+  db:
+    container_name: db
+    image: postgres:16
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=crud
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata: {}
